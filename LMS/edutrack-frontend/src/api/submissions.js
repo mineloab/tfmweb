@@ -1,21 +1,17 @@
 import { api } from "../../api/axios";
 import { createGrade, getGrades, updateGrade } from "../../api/grades";
 
-/**
- * Obtener todas las entregas
- */
+
 export async function getSubmissions() {
   const res = await api.get("/submissions");
 
-  // Normalizamos la respuesta
+
   return Array.isArray(res?.data?.data)
     ? res.data.data
     : res.data || [];
 }
 
-/**
- * Crear una nueva entrega (upload)
- */
+
 export async function createSubmission({ task_id, student_id, file }) {
   const formData = new FormData();
 
@@ -32,17 +28,13 @@ export async function createSubmission({ task_id, student_id, file }) {
   return res.data;
 }
 
-/**
- * Eliminar entrega
- */
+
 export async function deleteSubmission(id) {
   const res = await api.delete(`/submissions/${id}`);
   return res.data;
 }
 
-/**
- * Obtener una entrega por ID (opcional)
- */
+
 export async function getSubmissionById(id) {
   const res = await api.get(`/submissions/${id}`);
   return res.data;

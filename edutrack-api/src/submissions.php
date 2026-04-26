@@ -17,7 +17,7 @@ function submissions_index() {
         s.submitted_at,
 
         g.id AS grade_id,
-        g.score AS grade,        -- 🔥 AQUÍ ESTÁ EL FIX
+        g.score AS grade,        
         g.feedback
 
       FROM submissions s

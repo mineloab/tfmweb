@@ -44,7 +44,7 @@ function tasks_index(): void {
   jsonResponse(['data' => $stmt->fetchAll()]);
 }
 
-// POST /api/tasks
+
 function tasks_store(): void {
   $user = requireAdminTask();
 
@@ -126,7 +126,7 @@ function tasks_store(): void {
   jsonResponse(['data' => $out->fetch()], 201);
 }
 
-// DELETE /api/tasks/{id}
+
 function tasks_destroy($id): void {
   requireAdminTask();
 

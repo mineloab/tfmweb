@@ -28,7 +28,7 @@ function requireAdminTask(): array {
   return $payload;
 }
 
-// GET /api/tasks
+
 function tasks_index(): void {
   requireAdminTask();
 
@@ -49,7 +49,7 @@ function tasks_index(): void {
   jsonResponse(['data' => $stmt->fetchAll()]);
 }
 
-// POST /api/tasks
+
 function tasks_store(): void {
   $user = requireAdminTask();
 
@@ -61,7 +61,7 @@ function tasks_store(): void {
   $group_id = (int)($in['group_id'] ?? 0);
   $due_date = $in['due_date'] ?? null;
 
-  // teacher_id desde JWT (según cómo lo estés generando)
+
   $teacher_id = (int)($user['id'] ?? $user['user_id'] ?? 0);
 
   if ($title === '') jsonResponse(['error' => 'El título es obligatorio'], 422);
@@ -95,7 +95,7 @@ function tasks_store(): void {
   jsonResponse(['data' => $out->fetch()], 201);
 }
 
-// DELETE /api/tasks/{id}
+
 function tasks_destroy($id): void {
   requireAdminTask();
 

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/jwt.php';
 
-// Reutiliza jsonResponse() que ya tienes en auth.php (se carga desde index.php)
+
 
 function readJsonSubjects(): array {
   $raw = file_get_contents("php://input");
@@ -34,14 +34,13 @@ function requireAdminSubjects(): array {
   return $payload;
 }
 
-// GET /api/subjects
 function subjects_index(): void {
   requireAdminSubjects();
   $stmt = db()->query("SELECT id, name, code, created_at FROM subjects ORDER BY id DESC");
   jsonResponse(['data' => $stmt->fetchAll()]);
 }
 
-// POST /api/subjects  body: {name, code}
+
 function subjects_store(): void {
   requireAdminSubjects();
 
@@ -61,7 +60,7 @@ function subjects_store(): void {
   jsonResponse(['data' => $out->fetch()], 201);
 }
 
-// PUT /api/subjects/{id}
+
 function subjects_update(int $id): void {
   requireAdminSubjects();
 
@@ -84,7 +83,7 @@ function subjects_update(int $id): void {
   jsonResponse(['data' => $out->fetch()]);
 }
 
-// DELETE /api/subjects/{id}
+
 function subjects_destroy(int $id): void {
   requireAdminSubjects();
 

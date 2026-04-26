@@ -1,16 +1,77 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# EduTrack - Plataforma LMS para gestión académica
 
-Currently, two official plugins are available:
+Proyecto desarrollado como Trabajo Fin de Máster. EduTrack es una aplicación web tipo LMS que permite gestionar grupos, asignaturas, matrículas, tareas, entregas y calificaciones.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Tecnologías utilizadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Frontend
+- React
+- Vite
+- Axios
+- React Router
+- Chart.js
+- Bootstrap
 
-## Expanding the ESLint configuration
+### Backend
+- PHP
+- MySQL
+- API REST
+- JWT para autenticación
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Entorno local
+- XAMPP
+- Apache
+- MySQL / phpMyAdmin
+
+---
+
+## Requisitos previos
+
+Antes de ejecutar el proyecto es necesario tener instalado:
+
+- XAMPP
+- Node.js
+- npm
+- Navegador web
+- Visual Studio Code o editor similar
+
+---
+## Estructura general del proyecto
+
+edutrack-api/
+ ├── public/
+ │   └── index.php
+ ├── src/
+ │   ├── auth.php
+ │   ├── dashboard.php
+ │   ├── groups.php
+ │   ├── subjects.php
+ │   ├── tasks.php
+ │   ├── submissions.php
+ │   └── grades.php
+ └── uploads/
+
+edutrack-frontend/
+ ├── src/
+ │   ├── api/
+ │   ├── auth/
+ │   ├── components/
+ │   └── pages/
+ └── package.json
+ 
+ ---
+ 
+---
+
+## Cómo ejecutar el proyecto 
+
+
+1. Iniciar XAMPP (Apache + MySQL)
+2. Importar base de datos
+3. Ejecutar backend en htdocs
+4. Ejecutar frontend con `npm run dev`
+5. Acceder a http://localhost:5173
+ 

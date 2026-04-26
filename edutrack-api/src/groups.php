@@ -2,7 +2,7 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/jwt.php';
 
-// Reutilizamos jsonResponse() de auth.php (ya está cargado en index.php)
+
 
 function readJson(): array {
   $raw = file_get_contents("php://input");
@@ -34,14 +34,14 @@ function requireAuthRole(string $role): array {
   return $payload;
 }
 
-// GET /api/groups
+
 function groups_index(): void {
   requireAuthRole('admin');
   $stmt = db()->query("SELECT id, name, year, created_at FROM groups ORDER BY id DESC");
   jsonResponse(['data' => $stmt->fetchAll()]);
 }
 
-// POST /api/groups
+
 function groups_store(): void {
   requireAuthRole('admin');
 
@@ -61,7 +61,7 @@ function groups_store(): void {
   jsonResponse(['data' => $out->fetch()], 201);
 }
 
-// PUT /api/groups/{id}
+
 function groups_update(int $id): void {
   requireAuthRole('admin');
 
@@ -84,7 +84,7 @@ function groups_update(int $id): void {
   jsonResponse(['data' => $out->fetch()]);
 }
 
-// DELETE /api/groups/{id}
+
 function groups_destroy(int $id): void {
   requireAuthRole('admin');
 
