@@ -3,12 +3,6 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/jwt.php';
 
-function readJsonTask(): array {
-  $raw = file_get_contents("php://input");
-  $data = json_decode($raw, true);
-  return is_array($data) ? $data : [];
-}
-
 function requireAdminTask(): array {
   $SECRET = "SUPER_SECRET_KEY_123";
 
@@ -28,11 +22,7 @@ function requireAdminTask(): array {
   return $payload;
 }
 
-<<<<<<< HEAD
-
-=======
 // GET /api/tasks
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function tasks_index(): void {
   requireAdminTask();
 
@@ -42,6 +32,7 @@ function tasks_index(): void {
       t.title,
       t.description,
       t.due_date,
+      t.attachment_path,
       s.name AS subject,
       g.name AS group_name
     FROM tasks t
@@ -53,27 +44,16 @@ function tasks_index(): void {
   jsonResponse(['data' => $stmt->fetchAll()]);
 }
 
-<<<<<<< HEAD
-
-=======
 // POST /api/tasks
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function tasks_store(): void {
   $user = requireAdminTask();
 
-  $in = readJsonTask();
+  $title = trim((string)($_POST['title'] ?? ''));
+  $description = (string)($_POST['description'] ?? '');
+  $subject_id = (int)($_POST['subject_id'] ?? 0);
+  $group_id = (int)($_POST['group_id'] ?? 0);
+  $due_date = $_POST['due_date'] ?? null;
 
-  $title = trim((string)($in['title'] ?? ''));
-  $description = (string)($in['description'] ?? '');
-  $subject_id = (int)($in['subject_id'] ?? 0);
-  $group_id = (int)($in['group_id'] ?? 0);
-  $due_date = $in['due_date'] ?? null;
-
-<<<<<<< HEAD
-
-=======
-  // teacher_id desde JWT (según cómo lo estés generando)
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
   $teacher_id = (int)($user['id'] ?? $user['user_id'] ?? 0);
 
   if ($title === '') jsonResponse(['error' => 'El título es obligatorio'], 422);
@@ -83,18 +63,57 @@ function tasks_store(): void {
 
   if ($due_date === '' || $due_date === false) $due_date = null;
 
+  $attachment_path = null;
+
+  if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+    $file = $_FILES['attachment'];
+
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allowed = ['pdf'];
+
+    if (!in_array($ext, $allowed, true)) {
+      jsonResponse(['error' => 'Solo se permiten archivos PDF para el enunciado'], 422);
+    }
+
+    $dir = __DIR__ . '/../uploads/tasks/';
+    if (!is_dir($dir)) {
+      mkdir($dir, 0777, true);
+    }
+
+    $safeName = time() . '_' . preg_replace('/[^A-Za-z0-9_\.-]/', '_', $file['name']);
+    $fullPath = $dir . $safeName;
+
+    if (!move_uploaded_file($file['tmp_name'], $fullPath)) {
+      jsonResponse(['error' => 'No se pudo guardar el archivo adjunto'], 500);
+    }
+
+    $attachment_path = $safeName;
+  }
+
   $stmt = db()->prepare("
-    INSERT INTO tasks (subject_id, group_id, teacher_id, title, description, due_date)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO tasks (subject_id, group_id, teacher_id, title, description, due_date, attachment_path)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   ");
 
-  $stmt->execute([$subject_id, $group_id, $teacher_id, $title, $description, $due_date]);
+  $stmt->execute([
+    $subject_id,
+    $group_id,
+    $teacher_id,
+    $title,
+    $description,
+    $due_date,
+    $attachment_path
+  ]);
 
   $id = (int)db()->lastInsertId();
 
   $out = db()->prepare("
     SELECT
-      t.id, t.title, t.description, t.due_date,
+      t.id,
+      t.title,
+      t.description,
+      t.due_date,
+      t.attachment_path,
       s.name AS subject,
       g.name AS group_name
     FROM tasks t
@@ -107,13 +126,20 @@ function tasks_store(): void {
   jsonResponse(['data' => $out->fetch()], 201);
 }
 
-<<<<<<< HEAD
-
-=======
 // DELETE /api/tasks/{id}
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function tasks_destroy($id): void {
   requireAdminTask();
+
+  $q = db()->prepare("SELECT attachment_path FROM tasks WHERE id = ?");
+  $q->execute([(int)$id]);
+  $task = $q->fetch();
+
+  if ($task && !empty($task['attachment_path'])) {
+    $file = __DIR__ . '/../uploads/tasks/' . $task['attachment_path'];
+    if (is_file($file)) {
+      unlink($file);
+    }
+  }
 
   $stmt = db()->prepare("DELETE FROM tasks WHERE id = ?");
   $stmt->execute([(int)$id]);

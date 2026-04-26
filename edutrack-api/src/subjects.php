@@ -2,7 +2,11 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/jwt.php';
 
+<<<<<<< HEAD
 
+=======
+// Reutiliza jsonResponse() que ya tienes en auth.php (se carga desde index.php)
+>>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 
 function readJsonSubjects(): array {
   $raw = file_get_contents("php://input");
@@ -34,13 +38,21 @@ function requireAdminSubjects(): array {
   return $payload;
 }
 
+<<<<<<< HEAD
+=======
+// GET /api/subjects
+>>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function subjects_index(): void {
   requireAdminSubjects();
   $stmt = db()->query("SELECT id, name, code, created_at FROM subjects ORDER BY id DESC");
   jsonResponse(['data' => $stmt->fetchAll()]);
 }
 
+<<<<<<< HEAD
 
+=======
+// POST /api/subjects  body: {name, code}
+>>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function subjects_store(): void {
   requireAdminSubjects();
 
@@ -60,7 +72,11 @@ function subjects_store(): void {
   jsonResponse(['data' => $out->fetch()], 201);
 }
 
+<<<<<<< HEAD
 
+=======
+// PUT /api/subjects/{id}
+>>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function subjects_update(int $id): void {
   requireAdminSubjects();
 
@@ -83,7 +99,11 @@ function subjects_update(int $id): void {
   jsonResponse(['data' => $out->fetch()]);
 }
 
+<<<<<<< HEAD
 
+=======
+// DELETE /api/subjects/{id}
+>>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function subjects_destroy(int $id): void {
   requireAdminSubjects();
 
