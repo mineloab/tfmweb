@@ -1,77 +1,248 @@
+# EduTrack – Sistema Web de Gestión y Evaluación Académica
 
-# EduTrack - Plataforma LMS para gestión académica
+EduTrack es una aplicación web desarrollada como Trabajo Final de Máster (TFM) para la gestión académica y seguimiento educativo en entornos formativos.
 
-Proyecto desarrollado como Trabajo Fin de Máster. EduTrack es una aplicación web tipo LMS que permite gestionar grupos, asignaturas, matrículas, tareas, entregas y calificaciones.
-
----
-
-## Tecnologías utilizadas
-
-### Frontend
-- React
-- Vite
-- Axios
-- React Router
-- Chart.js
-- Bootstrap
-
-### Backend
-- PHP
-- MySQL
-- API REST
-- JWT para autenticación
-
-### Entorno local
-- XAMPP
-- Apache
-- MySQL / phpMyAdmin
+El sistema permite gestionar usuarios, grupos, asignaturas, tareas, entregas y calificaciones mediante una arquitectura cliente-servidor desacoplada basada en React, PHP y MySQL.
 
 ---
 
-## Requisitos previos
+# Tecnologías utilizadas
 
-Antes de ejecutar el proyecto es necesario tener instalado:
+## Frontend
 
-- XAMPP
-- Node.js
-- npm
-- Navegador web
-- Visual Studio Code o editor similar
+* React
+* Vite
+* Bootstrap
+* Axios
+* React Router
+
+## Backend
+
+* PHP
+* API REST
+* JWT (JSON Web Token)
+
+## Base de datos
+
+* MySQL
+
+## Entorno de desarrollo
+
+* XAMPP
+* Apache
+* GitHub
+* Jira
 
 ---
-## Estructura general del proyecto
 
-edutrack-api/
- ├── public/
- │   └── index.php
- ├── src/
- │   ├── auth.php
- │   ├── dashboard.php
- │   ├── groups.php
- │   ├── subjects.php
- │   ├── tasks.php
- │   ├── submissions.php
- │   └── grades.php
- └── uploads/
+# Funcionalidades principales
+
+## Gestión administrativa
+
+* Gestión de usuarios y roles
+* Gestión de grupos
+* Gestión de asignaturas
+* Matrículas de alumnos
+
+## Gestión académica
+
+* Creación de tareas
+* Entregas de actividades
+* Sistema de evaluación
+* Feedback del profesor
+
+## Dashboard académico
+
+* Métricas y estadísticas
+* Seguimiento del rendimiento
+* Visualización gráfica de datos
+
+## Exportación de datos
+
+* Exportación CSV
+* Informes PDF
+
+---
+
+# Arquitectura del sistema
+
+El proyecto utiliza una arquitectura cliente-servidor desacoplada:
+
+* Frontend desarrollado en React.
+* Backend desarrollado en PHP mediante API REST.
+* Comunicación mediante peticiones HTTP en formato JSON.
+* Autenticación mediante JWT.
+* Persistencia de datos mediante MySQL.
+
+---
+
+# Instalación del proyecto
+
+## 1. Clonar el repositorio
+
+
+git clone https://github.com/joseleonjaime/edutrack.git
+
+
+---
+
+# Configuración del backend
+
+## 1. Copiar el proyecto en XAMPP
+
+Copiar la carpeta:
+
+
+edutrack-api
+
+
+dentro de:
+
+
+C:\xampp\htdocs\
+
+
+## 2. Crear base de datos
+
+Crear una base de datos MySQL llamada:
+
+
+edutrack
+
+
+## 3. Importar el archivo SQL
+
+Importar el archivo:
+
+
+edutrack.sql
+
+
+mediante phpMyAdmin.
+
+## 4. Iniciar Apache y MySQL
+
+Desde el panel de control de XAMPP iniciar:
+
+* Apache
+* MySQL
+
+---
+
+# Configuración del frontend
+
+## 1. Acceder al proyecto frontend
+
+
+cd edutrack-frontend
+
+
+## 2. Instalar dependencias
+
+
+npm install
+
+
+## 3. Ejecutar el proyecto
+
+
+npm run dev
+
+
+La aplicación se ejecutará normalmente en:
+
+
+http://localhost:5173
+
+
+---
+
+# Credenciales de prueba
+
+## Administrador
+
+Email:
+
+
+admin@demo.com
+
+
+Contraseña:
+
+
+123456
+
+
+---
+
+# Estructura del proyecto
+
+## Frontend
+
 
 edutrack-frontend/
- ├── src/
- │   ├── api/
- │   ├── auth/
- │   ├── components/
- │   └── pages/
- └── package.json
- 
- ---
- 
+
+
+* Componentes React
+* Rutas protegidas
+* Dashboard
+* Gestión de tareas
+* Panel alumno/profesor
+
+## Backend
+
+
+edutrack-api/
+
+
+* API REST
+* JWT
+* Controladores PHP
+* Conexión MySQL
+* Gestión de permisos
+
 ---
 
-## Cómo ejecutar el proyecto 
+# Seguridad implementada
 
+* Autenticación JWT
+* Protección de rutas
+* Validación de roles
+* Consultas preparadas PDO
+* Validación básica de formularios
+* Control de acceso por usuario
 
-1. Iniciar XAMPP (Apache + MySQL)
-2. Importar base de datos
-3. Ejecutar backend en htdocs
-4. Ejecutar frontend con `npm run dev`
-5. Acceder a http://localhost:5173
- 
+---
+
+# Estado del proyecto
+
+Proyecto desarrollado como Trabajo Final de Máster (TFM).
+
+Actualmente implementa:
+
+* autenticación,
+* gestión académica,
+* dashboard,
+* entregas,
+* evaluación,
+* exportación de datos.
+
+---
+
+# Trabajos futuros
+
+* Notificaciones por email
+* Rúbricas de evaluación
+* Accesibilidad WCAG
+* Despliegue cloud
+* Aplicación móvil
+* Docker
+* Auditoría de seguridad
+
+---
+
+# Autor
+
+José León Jaime
+
+Máster Universitario en Desarrollo de Sitios y Aplicaciones Web – UOC

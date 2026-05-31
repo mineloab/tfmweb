@@ -18,31 +18,35 @@ import Dashboard from "../pages/Admin/Dashboard";
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Público */}
       <Route path="/login" element={<Login />} />
 
-      {/* Home (redirige según rol) */}
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuth>
+            <Home />
+          </RequireAuth>
+        }
+      />
 
-      {/* Admin */}
-     <Route
-  path="/admin"
-  element={
-    <RequireAuth role="admin">
-      <Admin />
-    </RequireAuth>
-  }
->
-  <Route path="dashboard" element={<Dashboard />} />
-  <Route path="groups" element={<Groups />} />
-  <Route path="subjects" element={<Subjects />} />
-  <Route path="group-subjects" element={<GroupSubjects />} />
-  <Route path="enrollments" element={<Enrollments />} />
-  <Route path="tasks" element={<Tasks />} />
-  <Route path="submissions" element={<Submissions />} />
-</Route>
+      <Route
+        path="/admin"
+        element={
+          <RequireAuth role="admin">
+            <Admin />
+          </RequireAuth>
+        }
+      />
 
-      {/* CRUD Grupos */}
+      <Route
+        path="/admin/dashboard"
+        element={
+          <RequireAuth role={["admin", "teacher"]}>
+            <Dashboard />
+          </RequireAuth>
+        }
+      />
+
       <Route
         path="/admin/groups"
         element={
@@ -52,7 +56,6 @@ export default function AppRoutes() {
         }
       />
 
-      {/* CRUD Asignaturas */}
       <Route
         path="/admin/subjects"
         element={
@@ -62,7 +65,42 @@ export default function AppRoutes() {
         }
       />
 
-      {/* Teacher */}
+      <Route
+        path="/admin/group-subjects"
+        element={
+          <RequireAuth role="admin">
+            <GroupSubjects />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/admin/enrollments"
+        element={
+          <RequireAuth role="admin">
+            <Enrollments />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/admin/tasks"
+        element={
+          <RequireAuth role={["admin", "teacher"]}>
+            <Tasks />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/admin/submissions"
+        element={
+          <RequireAuth role={["admin", "teacher"]}>
+            <Submissions />
+          </RequireAuth>
+        }
+      />
+
       <Route
         path="/teacher"
         element={
@@ -72,7 +110,33 @@ export default function AppRoutes() {
         }
       />
 
-      {/* Student */}
+      <Route
+        path="/teacher/dashboard"
+        element={
+          <RequireAuth role="teacher">
+            <Dashboard />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/teacher/tasks"
+        element={
+          <RequireAuth role="teacher">
+            <Tasks />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/teacher/submissions"
+        element={
+          <RequireAuth role="teacher">
+            <Submissions />
+          </RequireAuth>
+        }
+      />
+
       <Route
         path="/student"
         element={
@@ -81,59 +145,11 @@ export default function AppRoutes() {
           </RequireAuth>
         }
       />
-      <Route
-  path="/admin/group-subjects"
-  element={
-    <RequireAuth role="admin">
-      <GroupSubjects />
-    </RequireAuth>
-  }
-/>
-<Route
-  path="/admin/enrollments"
-  element={
-    <RequireAuth role="admin">
-      <Enrollments />
-    </RequireAuth>
-  }
-/>
 
-<Route
-  path="/admin/tasks"
-  element={
-    <RequireAuth role="admin">
-      <Tasks />
-    </RequireAuth>
-  }
-/>
-<Route
-  path="/admin/submissions"
-  element={
-    <RequireAuth role="admin">
-      <Submissions />
-    </RequireAuth>
-  }
-
-/>
-<Route
-  path="/admin/dashboard"
-  element={
-    <RequireAuth role="admin">
-      <Dashboard />
-    </RequireAuth>
-  }
-/>
-
-      {/* 404 */}
       <Route
         path="*"
         element={<div style={{ padding: 16 }}>Página no encontrada</div>}
       />
     </Routes>
-    
-
-
-
-    
   );
 }

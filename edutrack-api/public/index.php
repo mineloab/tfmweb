@@ -1,11 +1,7 @@
 <?php
-<<<<<<< HEAD
 // =========================
 // CORS (SIEMPRE)
 // =========================
-=======
-// CORS (SIEMPRE)
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -17,13 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   exit;
 }
 
-<<<<<<< HEAD
 // =========================
 // INCLUDES
 // =========================
-=======
-// -------- INCLUDES --------
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 require_once __DIR__ . '/../src/auth.php';
 require_once __DIR__ . '/../src/groups.php';
 require_once __DIR__ . '/../src/subjects.php';
@@ -34,14 +26,11 @@ require_once __DIR__ . '/../src/tasks.php';
 require_once __DIR__ . '/../src/submissions.php';
 require_once __DIR__ . '/../src/grades.php';
 require_once __DIR__ . '/../src/dashboard.php';
+require_once __DIR__ . '/../src/student.php';
 
-<<<<<<< HEAD
 // =========================
 // ROUTING
 // =========================
-=======
-// -------- ROUTING --------
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $base = '/edutrack-api/public';
 $route = str_starts_with($path, $base) ? substr($path, strlen($base)) : $path;
@@ -132,15 +121,8 @@ if ($route === '/api/group-subjects' && $method === 'POST') {
 }
 
 if (preg_match('#^/api/group-subjects/(\d+)$#', $route, $m)) {
-<<<<<<< HEAD
   if ($method === 'DELETE') {
     groupSubjects_destroy((int)$m[1]);
-=======
-  $id = (int)$m[1];
-
-  if ($method === 'DELETE') {
-    groupSubjects_destroy($id);
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
     exit;
   }
 }
@@ -219,11 +201,7 @@ if (preg_match('#^/api/submissions/(\d+)$#', $route, $m)) {
 
 
 // =========================
-<<<<<<< HEAD
-// GRADES (MEJORADO 🔥)
-=======
 // GRADES
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 // =========================
 if ($route === '/api/grades' && $method === 'GET') {
   grades_index();
@@ -235,8 +213,6 @@ if ($route === '/api/grades' && $method === 'POST') {
   exit;
 }
 
-<<<<<<< HEAD
-// GET por ID
 if (preg_match('#^/api/grades/(\d+)$#', $route, $m)) {
   $id = (int)$m[1];
 
@@ -252,11 +228,6 @@ if (preg_match('#^/api/grades/(\d+)$#', $route, $m)) {
 
   if ($method === 'DELETE') {
     grades_destroy($id);
-=======
-if (preg_match('#^/api/grades/(\d+)$#', $route, $m)) {
-  if ($method === 'DELETE') {
-    grades_destroy((int)$m[1]);
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
     exit;
   }
 }
@@ -268,6 +239,17 @@ if (preg_match('#^/api/grades/(\d+)$#', $route, $m)) {
 if ($route === '/api/dashboard/stats' && $method === 'GET') {
   dashboard_stats();
   exit;
+}
+
+
+// =========================
+// STUDENT / ALUMNO
+// =========================
+if (preg_match('#^/api/student/(\d+)$#', $route, $m)) {
+  if ($method === 'GET') {
+    student_dashboard((int)$m[1]);
+    exit;
+  }
 }
 
 

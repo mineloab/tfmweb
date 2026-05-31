@@ -1,80 +1,79 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  function logout() {
-    localStorage.removeItem("token");
-    navigate("/login");
+  function handleLogout() {
+    logout();
+    navigate("/login", { replace: true });
   }
 
+  if (!user) return null;
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow">
-      <div className="container-fluid">
-        <Link className="navbar-brand fw-bold" to="/admin/dashboard">
+    <nav className="navbar navbar-dark bg-dark px-3 d-flex justify-content-between">
+      <div className="d-flex align-items-center gap-3">
+        <Link className="navbar-brand fw-bold mb-0" to="/">
           EduTrack
         </Link>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span className="navbar-toggler-icon"></span>
+        {user.role === "admin" && (
+          <>
+            <Link className="nav-link text-light" to="/admin/dashboard">
+              Dashboard
+            </Link>
+            <Link className="nav-link text-light" to="/admin/groups">
+              Grupos
+            </Link>
+            <Link className="nav-link text-light" to="/admin/subjects">
+              Asignaturas
+            </Link>
+            <Link className="nav-link text-light" to="/admin/group-subjects">
+              Grupo-Asignaturas
+            </Link>
+            <Link className="nav-link text-light" to="/admin/enrollments">
+              Matrículas
+            </Link>
+            <Link className="nav-link text-light" to="/admin/tasks">
+              Tareas
+            </Link>
+            <Link className="nav-link text-light" to="/admin/submissions">
+              Entregas
+            </Link>
+          </>
+        )}
+
+        {user.role === "teacher" && (
+          <>
+            <Link className="nav-link text-light" to="/teacher">
+              Dashboard
+            </Link>
+            <Link className="nav-link text-light" to="/teacher/tasks">
+              Tareas
+            </Link>
+            <Link className="nav-link text-light" to="/teacher/submissions">
+              Entregas
+            </Link>
+          </>
+        )}
+
+        {user.role === "student" && (
+          <Link className="nav-link text-light" to="/student">
+            Panel Alumno
+          </Link>
+        )}
+      </div>
+
+      <div className="d-flex align-items-center gap-3">
+        <span className="text-white">
+          {user.name} ({user.role})
+        </span>
+
+        <button className="btn btn-outline-light btn-sm" onClick={handleLogout}>
+          Cerrar sesión
         </button>
-
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto">
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin/dashboard">
-                Dashboard
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin/groups">
-                Grupos
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin/subjects">
-                Asignaturas
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin/group-subjects">
-                Grupo-Asignaturas
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin/enrollments">
-                Matrículas
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin/tasks">
-                Tareas
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin/submissions">
-                Entregas
-              </Link>
-            </li>
-
-          </ul>
-
-          <button className="btn btn-outline-light" onClick={logout}>
-            Cerrar sesión
-          </button>
-        </div>
       </div>
     </nav>
   );

@@ -8,7 +8,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
+  // Cargar usuario autenticado
   async function loadMe() {
     try {
       const { data } = await api.get("/auth/me");
@@ -25,13 +25,13 @@ export function AuthProvider({ children }) {
     setLoading(true);
     const { data } = await api.post("/auth/login", { email, password });
 
- 
+    // Guardar token
     localStorage.setItem("token", data.token);
 
-   
+    
     api.defaults.headers.common.Authorization = `Bearer ${data.token}`;
 
-    // Cargar usuario
+  
     await loadMe();
   }
 
@@ -42,13 +42,14 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       api.defaults.headers.common.Authorization = `Bearer ${token}`;
     }
     loadMe();
-   
+    
   }, []);
 
   return (

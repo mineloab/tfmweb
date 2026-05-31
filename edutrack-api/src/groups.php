@@ -2,22 +2,21 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/jwt.php';
 
-<<<<<<< HEAD
-
-=======
-// Reutilizamos jsonResponse() de auth.php (ya está cargado en index.php)
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
-
 function readJson(): array {
   $raw = file_get_contents("php://input");
   $data = json_decode($raw, true);
+
   return is_array($data) ? $data : [];
 }
 
-function requireAuthRole(string $role): array {
-  $SECRET = "SUPER_SECRET_KEY_123"; // la misma que en auth.php
+
+// ADMIN O PROFESOR
+function requireAdminOrTeacher(): array {
+
+  $SECRET = "SUPER_SECRET_KEY_123";
 
   $headers = function_exists('getallheaders') ? getallheaders() : [];
+
   $auth = $headers['Authorization'] ?? $headers['authorization'] ?? '';
 
   if (!is_string($auth) || !str_starts_with($auth, 'Bearer ')) {
@@ -25,94 +24,159 @@ function requireAuthRole(string $role): array {
   }
 
   $token = substr($auth, 7);
+
   $payload = verify_jwt($token, $SECRET);
 
   if (!$payload) {
     jsonResponse(['error' => 'Token inválido'], 401);
   }
 
-  if (($payload['role'] ?? null) !== $role) {
+  if (!in_array(($payload['role'] ?? ''), ['admin', 'teacher'], true)) {
     jsonResponse(['error' => 'Prohibido'], 403);
   }
 
   return $payload;
 }
 
-<<<<<<< HEAD
 
-=======
+// SOLO ADMIN
+function requireAdmin(): array {
+
+  $payload = requireAdminOrTeacher();
+
+  if (($payload['role'] ?? '') !== 'admin') {
+    jsonResponse(['error' => 'Prohibido'], 403);
+  }
+
+  return $payload;
+}
+
+
 // GET /api/groups
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function groups_index(): void {
-  requireAuthRole('admin');
-  $stmt = db()->query("SELECT id, name, year, created_at FROM groups ORDER BY id DESC");
+
+  requireAdminOrTeacher();
+
+  $stmt = db()->query("
+    SELECT id, name, year, created_at
+    FROM groups
+    ORDER BY id DESC
+  ");
+
   jsonResponse(['data' => $stmt->fetchAll()]);
 }
 
-<<<<<<< HEAD
 
-=======
 // POST /api/groups
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function groups_store(): void {
-  requireAuthRole('admin');
+
+  requireAdmin();
 
   $in = readJson();
+
   $name = trim((string)($in['name'] ?? ''));
   $year = trim((string)($in['year'] ?? ''));
 
-  if ($name === '') jsonResponse(['error' => 'El nombre es obligatorio'], 422);
+  if ($name === '') {
+    jsonResponse(['error' => 'El nombre es obligatorio'], 422);
+  }
 
-  $stmt = db()->prepare("INSERT INTO groups (name, year) VALUES (?, ?)");
-  $stmt->execute([$name, $year !== '' ? $year : null]);
+  $stmt = db()->prepare("
+    INSERT INTO groups (name, year)
+    VALUES (?, ?)
+  ");
+
+  $stmt->execute([
+    $name,
+    $year !== '' ? $year : null
+  ]);
 
   $id = (int)db()->lastInsertId();
-  $out = db()->prepare("SELECT id, name, year, created_at FROM groups WHERE id = ?");
+
+  $out = db()->prepare("
+    SELECT id, name, year, created_at
+    FROM groups
+    WHERE id = ?
+  ");
+
   $out->execute([$id]);
 
   jsonResponse(['data' => $out->fetch()], 201);
 }
 
-<<<<<<< HEAD
 
-=======
 // PUT /api/groups/{id}
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function groups_update(int $id): void {
-  requireAuthRole('admin');
+
+  requireAdmin();
 
   $in = readJson();
+
   $name = trim((string)($in['name'] ?? ''));
   $year = trim((string)($in['year'] ?? ''));
 
-  if ($name === '') jsonResponse(['error' => 'El nombre es obligatorio'], 422);
+  if ($name === '') {
+    jsonResponse(['error' => 'El nombre es obligatorio'], 422);
+  }
 
-  $chk = db()->prepare("SELECT id FROM groups WHERE id = ?");
+  $chk = db()->prepare("
+    SELECT id
+    FROM groups
+    WHERE id = ?
+  ");
+
   $chk->execute([$id]);
-  if (!$chk->fetch()) jsonResponse(['error' => 'Grupo no encontrado'], 404);
 
-  $stmt = db()->prepare("UPDATE groups SET name = ?, year = ? WHERE id = ?");
-  $stmt->execute([$name, $year !== '' ? $year : null, $id]);
+  if (!$chk->fetch()) {
+    jsonResponse(['error' => 'Grupo no encontrado'], 404);
+  }
 
-  $out = db()->prepare("SELECT id, name, year, created_at FROM groups WHERE id = ?");
+  $stmt = db()->prepare("
+    UPDATE groups
+    SET name = ?, year = ?
+    WHERE id = ?
+  ");
+
+  $stmt->execute([
+    $name,
+    $year !== '' ? $year : null,
+    $id
+  ]);
+
+  $out = db()->prepare("
+    SELECT id, name, year, created_at
+    FROM groups
+    WHERE id = ?
+  ");
+
   $out->execute([$id]);
 
   jsonResponse(['data' => $out->fetch()]);
 }
 
-<<<<<<< HEAD
 
-=======
 // DELETE /api/groups/{id}
->>>>>>> 1e6634cdc72506e2983dcfae2d70978c731ae84b
 function groups_destroy(int $id): void {
-  requireAuthRole('admin');
 
-  $chk = db()->prepare("SELECT id FROM groups WHERE id = ?");
+  requireAdmin();
+
+  $chk = db()->prepare("
+    SELECT id
+    FROM groups
+    WHERE id = ?
+  ");
+
   $chk->execute([$id]);
-  if (!$chk->fetch()) jsonResponse(['error' => 'Grupo no encontrado'], 404);
 
-  $stmt = db()->prepare("DELETE FROM groups WHERE id = ?");
+  if (!$chk->fetch()) {
+    jsonResponse(['error' => 'Grupo no encontrado'], 404);
+  }
+
+  $stmt = db()->prepare("
+    DELETE FROM groups
+    WHERE id = ?
+  ");
+
   $stmt->execute([$id]);
 
   jsonResponse(['ok' => true]);
